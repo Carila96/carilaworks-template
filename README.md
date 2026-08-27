@@ -8,7 +8,7 @@ Control は作成時に `README.md`、`PROJECT_BRIEF.md`、`carila-project.json`
 
 - ルートの最小 `index.html` により `STATIC_SOURCE` として判定可能
 - lifecycle は安全な初期値 `WORKING`
-- public、preview、production URL および subdomain は未設定
+- repository、preview、production URL および subdomain は空文字で未設定
 - framework、build tool、release adapter、hosting provider は未固定
 
 ## 制作フロー

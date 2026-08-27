@@ -1,13 +1,15 @@
 {
   "schemaVersion": "1.0",
-  "name": "REPLACE_WITH_PROJECT_NAME",
-  "slug": "replace-with-project-slug",
-  "description": "REPLACE_WITH_PROJECT_DESCRIPTION",
+  "id": "REPLACE_WITH_PROJECT_ID",
+  "title": "REPLACE_WITH_PROJECT_NAME",
+  "description": "",
+  "briefPath": "PROJECT_BRIEF.md",
+  "category": "",
+  "repositoryUrl": "",
+  "previewUrl": "",
+  "productionUrl": "",
+  "subdomain": "",
   "status": "WORKING",
-  "releaseAdapterType": null,
-  "outputDirectory": null,
-  "publicUrl": null,
-  "previewUrl": null,
-  "productionUrl": null,
-  "subdomain": null
+  "createdAt": "REPLACE_WITH_CREATED_AT",
+  "updatedAt": "REPLACE_WITH_UPDATED_AT"
 }
