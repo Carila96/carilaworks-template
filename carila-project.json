@@ -1,18 +1,13 @@
 {
   "schemaVersion": "1.0",
-  "project": {
-    "name": "REPLACE_WITH_PROJECT_NAME",
-    "slug": "replace-with-project-slug",
-    "description": "REPLACE_WITH_PROJECT_DESCRIPTION",
-    "status": "planning",
-    "visibility": "private"
-  },
-  "repository": {
-    "owner": "REPLACE_WITH_GITHUB_OWNER",
-    "name": "REPLACE_WITH_REPOSITORY_NAME"
-  },
-  "deployment": {
-    "provider": null,
-    "productionUrl": null
-  }
+  "name": "REPLACE_WITH_PROJECT_NAME",
+  "slug": "replace-with-project-slug",
+  "description": "REPLACE_WITH_PROJECT_DESCRIPTION",
+  "status": "WORKING",
+  "releaseAdapterType": null,
+  "outputDirectory": null,
+  "publicUrl": null,
+  "previewUrl": null,
+  "productionUrl": null,
+  "subdomain": null
 }
