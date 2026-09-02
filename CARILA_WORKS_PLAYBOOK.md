@@ -111,6 +111,7 @@
 - version更新、DB migration、古いclientとの互換性をどう扱うか。
 - 外部サービス終了・料金改定時の代替策が必要か。
 - サービス終了時にユーザーデータをどうするか。
+- 自動deployがある場合、docs / Harness / metadataだけの変更まで再deploy対象になっていないか。deployに影響するpathと影響しないpathを区別できるか。
 
 ## 公開前チェック
 
@@ -132,3 +133,6 @@
 
 - **経験:** lifecycleをRepository manifestとControl DBの双方から変更可能にすると状態競合が起こり得る。
 - **一般化:** 重要状態には単一のSource of Truthを定め、mirror側から状態遷移を発生させない。
+
+- **経験:** Harnessや進捗文書の更新だけでも、pathを区別しないpush webhookではPreview deployが発火し得る。
+- **一般化:** 自動deployのtriggerは「Repositoryが変わったか」ではなく「実行成果物へ影響するpathが変わったか」で判定し、docs・運用metadataだけの更新は不要なdeployから除外する。
