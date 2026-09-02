@@ -1,20 +1,22 @@
 # CARILA WORKS 作品制作ルール
 
-このリポジトリは CARILA WORKS Control から作成される作品リポジトリです。作業前に `README.md`、`PROJECT_BRIEF.md`、`carila-project.json`、既存コードと、より狭い範囲の `AGENTS.md` を確認してください。
+このリポジトリは CARILA WORKS Control から作成される作品リポジトリです。作業前に `README.md`、`PROJECT_BRIEF.md`、`CARILA_WORKS_PLAYBOOK.md`、`carila-project.json`、既存コードと、より狭い範囲の `AGENTS.md` を確認してください。
 
 ## Harness の読み順
 
 長期制作で文脈・決定・現在地を失わないため、依頼に関係する Harness 文書を確認してください。
 
 1. `PROJECT_BRIEF.md` — 企画から渡された作品要件の原文。勝手に要約して置き換えない。
-2. `docs/CONSTITUTION.md` — 作品の目的、守る価値、変えてはいけない原則。
-3. `docs/REQUIREMENTS.md` — ユーザーと合意済みの確定仕様。
-4. `docs/DECISIONS.md` — 重要な決定と、その理由・代替案。
-5. `docs/UNRESOLVED.md` — 未確定事項。ここにある内容を推測で確定しない。
-6. `work/ROADMAP.md` — 現在の制作計画と段階。
-7. `work/CURRENT_TASK.md` — 今回取り組む範囲、完了条件、対象外。
-8. `work/PROJECT_STATUS.md` — 現在地、完了済み、次の作業、引き継ぎ情報。
-9. `evals/ACCEPTANCE.md` — 完成と判定するための検品条件。
+2. `CARILA_WORKS_PLAYBOOK.md` — CARILA WORKS全体で蓄積した制作経験と、毎作品で一度は検討したい論点。
+3. `docs/CONSTITUTION.md` — 作品の目的、守る価値、変えてはいけない原則。
+4. `docs/REQUIREMENTS.md` — ユーザーと合意済みの確定仕様。
+5. `docs/DECISIONS.md` — 重要な決定と、その理由・代替案。
+6. `docs/UNRESOLVED.md` — 未確定事項。ここにある内容を推測で確定しない。
+7. `work/ROADMAP.md` — 現在の制作計画と段階。
+8. `work/CURRENT_TASK.md` — 今回取り組む範囲、完了条件、対象外。
+9. `work/PROJECT_CHECKLIST.md` — Playbook項目をこの作品でどう扱うか。
+10. `work/PROJECT_STATUS.md` — 現在地、完了済み、次の作業、引き継ぎ情報。
+11. `evals/ACCEPTANCE.md` — 完成と判定するための検品条件。
 
 すべてを毎回書き換えない。今回の変更によって事実が変わった文書だけを、実装と同じ変更の中で更新する。
 
@@ -27,6 +29,17 @@
 - 作業開始時は `work/CURRENT_TASK.md` に今回の目的・完了条件・対象外を合わせ、完了時は `work/PROJECT_STATUS.md` を次回そのまま再開できる状態へ更新する。
 - 完成を主張する前に `evals/ACCEPTANCE.md` の該当項目を確認する。未確認項目がある場合は未確認と報告する。
 - React、Vite、Next.js など特定のフレームワークや hosting provider を前提にしない。必要になった時点で、作品要件に合う構成を選ぶ。
+
+## Playbook と提案
+
+- `CARILA_WORKS_PLAYBOOK.md` は実装命令ではなく、検討漏れを防ぐための共通知識である。作品に不要な機能を機械的に追加しない。
+- 新作開始時と、企画・制作の節目で `work/PROJECT_CHECKLIST.md` を確認する。
+- ユーザーが「次に何をやる？」「残タスクは？」「他に決めることある？」と聞いた場合、実装中タスクだけでなく `PROJECT_CHECKLIST` の `UNREVIEWED` / `LATER` から、現在の段階に関係する項目を優先順位付きで提案する。
+- ユーザーが明確に「今回は不要」と判断しない限り、項目を会話から消えたことだけで `NOT_NEEDED` にしない。
+- ユーザーが後回しにした項目は `LATER` とし、適切な段階で再提示する。
+- 採用された項目は `ADOPTED` とした上で `docs/REQUIREMENTS.md` または `work/CURRENT_TASK.md` に具体化し、完了後に `DONE` とする。
+- すべての未検討項目を一度に列挙して会話を圧迫しない。今決める価値が高いものを先に提案し、残りはChecklistに保持する。
+- 制作中に見つかった「別作品でも起こり得る失敗」「有効な再発防止策」は作品固有の事情と分離して一般化し、CARILA WORKS Playbookへ追加する候補として報告する。
 
 ## Repository capability と release
 
@@ -54,5 +67,5 @@
 
 ## Harness 改善
 
-- 同種の失敗、仕様の取り違え、引き継ぎ漏れが再発した場合は、その場の修正だけで終わらせず、どの Harness 文書・ルール・検品条件を直せば再発を防げるか確認する。
+- 同種の失敗、仕様の取り違え、引き継ぎ漏れが再発した場合は、その場の修正だけで終わらせず、どの Harness 文書・Playbook項目・ルール・検品条件を直せば再発を防げるか確認する。
 - Harness 自体の変更は作品仕様の変更と区別し、既存の確定仕様や lifecycle を暗黙に変更しない。
