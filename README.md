@@ -12,6 +12,7 @@ Control は作成時に `README.md`、`PROJECT_BRIEF.md`、`carila-project.json`
 - framework、build tool、release adapter、hosting provider は未固定
 - 長期制作の文脈を維持する CARILA WORKS Harness を同梱
 - 過去の制作経験を次の作品へ持ち越す `CARILA_WORKS_PLAYBOOK.md` と、作品ごとの検討状況を保持する `work/PROJECT_CHECKLIST.md` を同梱
+- 制作中に得た再利用可能な知見を自動候補化する `work/PLAYBOOK_CANDIDATES.md` を同梱
 
 ## Harness
 
@@ -33,6 +34,7 @@ work/
   ROADMAP.md
   CURRENT_TASK.md
   PROJECT_CHECKLIST.md
+  PLAYBOOK_CANDIDATES.md
   PROJECT_STATUS.md
 
 evals/
@@ -48,6 +50,7 @@ evals/
 - `ROADMAP.md`: 制作工程
 - `CURRENT_TASK.md`: 今回の作業範囲と完了条件
 - `PROJECT_CHECKLIST.md`: Playbookの各論点をこの作品で採用・後回し・不要・完了のどれとして扱うか
+- `PLAYBOOK_CANDIDATES.md`: この作品で得た、他作品にも還元できそうな知見の候補箱
 - `PROJECT_STATUS.md`: 現在地と次回への引き継ぎ
 - `ACCEPTANCE.md`: 完成判定の検品条件
 
@@ -62,7 +65,15 @@ Playbookは「全部実装するチェックリスト」ではなく、「一度
 - ユーザーがこの作品では不要と判断した項目だけ `NOT_NEEDED` とする。
 - 採用した項目は `ADOPTED`、実装・確認完了後は `DONE` とする。
 - 「次に何をやる？」「残タスクは？」と聞かれた時は、通常の実装タスクに加えて、現在の制作段階に関係する `UNREVIEWED` / `LATER` を提案候補として出す。
-- 制作中に別作品でも役立つ失敗・学びが見つかった場合は、一般化してPlaybookへ追加する。
+
+## 経験値の学習ループ
+
+- Codex / AI は制作中に、別作品でも再利用できる失敗・バグ原因・回避策・設計原則・検品観点を見つけたら、ユーザーから指示がなくても `work/PLAYBOOK_CANDIDATES.md` へ候補として残す。
+- 候補は作品固有事情そのものではなく、別作品でも使える形へ一般化する。
+- 単なる好み、未検証の推測、一作品だけの特殊事情は候補にしない。
+- product philosophyや課金・公開方針など思想を変える内容は勝手に共通ルール化しない。
+- 候補は `CANDIDATE` → `PROMOTED` / `REJECTED` で処理し、共通化に値するものだけ `CARILA_WORKS_PLAYBOOK.md` へ昇格する。
+- 未処理候補がある場合、作業完了・引き継ぎ時に「Playbook候補あり」と報告する。
 
 ## 制作フロー
 
@@ -71,12 +82,13 @@ Playbookは「全部実装するチェックリスト」ではなく、「一度
 3. `PROJECT_CHECKLIST.md` で、現在の段階で検討すべき共通論点を確認する。
 4. `CURRENT_TASK.md` に今回の範囲と完了条件を置き、Codexで制作する。
 5. 実装と同時に、変更された事実に対応するHarness文書を更新する。
-6. 企画・制作の節目ではChecklistの未検討・後回し項目から次の検討候補を提案する。
-7. `ACCEPTANCE.md` と利用可能なテストで検品する。
-8. `PROJECT_STATUS.md` を次回そのまま再開できる状態へ更新する。
-9. Pull Request を review して `main` へ merge する。
-10. 自動更新された Preview を Control で確認する。
-11. lifecycle と公開先を Control で管理し、承認後に公開する。
+6. 制作中に再利用可能な学びが出たら `PLAYBOOK_CANDIDATES.md` へ自動候補化する。
+7. 企画・制作の節目ではChecklistの未検討・後回し項目から次の検討候補を提案する。
+8. `ACCEPTANCE.md` と利用可能なテストで検品する。
+9. `PROJECT_STATUS.md` を次回そのまま再開できる状態へ更新する。
+10. Pull Request を review して `main` へ merge する。
+11. 自動更新された Preview を Control で確認する。
+12. lifecycle と公開先を Control で管理し、承認後に公開する。
 
 `carila-project.json` は Repository 契約および Control metadata の mirror です。manifest の編集によって公開状態を変更したり、release 方式を指定したりしません。
 
