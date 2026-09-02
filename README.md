@@ -11,6 +11,7 @@ Control は作成時に `README.md`、`PROJECT_BRIEF.md`、`carila-project.json`
 - repository、preview、production URL および subdomain は空文字で未設定
 - framework、build tool、release adapter、hosting provider は未固定
 - 長期制作の文脈を維持する CARILA WORKS Harness を同梱
+- 過去の制作経験を次の作品へ持ち越す `CARILA_WORKS_PLAYBOOK.md` と、作品ごとの検討状況を保持する `work/PROJECT_CHECKLIST.md` を同梱
 
 ## Harness
 
@@ -19,6 +20,7 @@ Control は作成時に `README.md`、`PROJECT_BRIEF.md`、`carila-project.json`
 ```text
 AGENTS.md
 PROJECT_BRIEF.md
+CARILA_WORKS_PLAYBOOK.md
 carila-project.json
 
 docs/
@@ -30,6 +32,7 @@ docs/
 work/
   ROADMAP.md
   CURRENT_TASK.md
+  PROJECT_CHECKLIST.md
   PROJECT_STATUS.md
 
 evals/
@@ -37,28 +40,43 @@ evals/
 ```
 
 - `PROJECT_BRIEF.md`: 企画から渡された作品要件の原文
+- `CARILA_WORKS_PLAYBOOK.md`: CARILA WORKS全体で蓄積した制作経験・検討候補・再発防止策
 - `CONSTITUTION.md`: 作品の目的・守る価値・不変原則
 - `REQUIREMENTS.md`: 合意済みの確定仕様
 - `DECISIONS.md`: 重要な決定と理由
 - `UNRESOLVED.md`: 未確定事項・確認待ち
 - `ROADMAP.md`: 制作工程
 - `CURRENT_TASK.md`: 今回の作業範囲と完了条件
+- `PROJECT_CHECKLIST.md`: Playbookの各論点をこの作品で採用・後回し・不要・完了のどれとして扱うか
 - `PROJECT_STATUS.md`: 現在地と次回への引き継ぎ
 - `ACCEPTANCE.md`: 完成判定の検品条件
 
 Harness文書は全部を毎回更新するものではありません。実装によって事実が変わった文書だけを更新し、仕様・決定・未確定事項・現在地を混在させないことを目的とします。
 
+## Playbook の考え方
+
+Playbookは「全部実装するチェックリスト」ではなく、「一度は検討して、不要なら不要と明示するための経験値帳」です。
+
+- 未検討の項目は `UNREVIEWED` のまま保持する。
+- 今はやらない項目は `LATER` として保持する。
+- ユーザーがこの作品では不要と判断した項目だけ `NOT_NEEDED` とする。
+- 採用した項目は `ADOPTED`、実装・確認完了後は `DONE` とする。
+- 「次に何をやる？」「残タスクは？」と聞かれた時は、通常の実装タスクに加えて、現在の制作段階に関係する `UNREVIEWED` / `LATER` を提案候補として出す。
+- 制作中に別作品でも役立つ失敗・学びが見つかった場合は、一般化してPlaybookへ追加する。
+
 ## 制作フロー
 
 1. Control がこの金型から作品 Repository を作り、作品固有情報と brief を設定する。
-2. `AGENTS.md` と `PROJECT_BRIEF.md` を読み、Harnessを作品固有内容へ合わせる。
-3. `CURRENT_TASK.md` に今回の範囲と完了条件を置き、Codexで制作する。
-4. 実装と同時に、変更された事実に対応するHarness文書を更新する。
-5. `ACCEPTANCE.md` と利用可能なテストで検品する。
-6. `PROJECT_STATUS.md` を次回そのまま再開できる状態へ更新する。
-7. Pull Request を review して `main` へ merge する。
-8. 自動更新された Preview を Control で確認する。
-9. lifecycle と公開先を Control で管理し、承認後に公開する。
+2. `AGENTS.md`、`PROJECT_BRIEF.md`、`CARILA_WORKS_PLAYBOOK.md` を読み、Harnessを作品固有内容へ合わせる。
+3. `PROJECT_CHECKLIST.md` で、現在の段階で検討すべき共通論点を確認する。
+4. `CURRENT_TASK.md` に今回の範囲と完了条件を置き、Codexで制作する。
+5. 実装と同時に、変更された事実に対応するHarness文書を更新する。
+6. 企画・制作の節目ではChecklistの未検討・後回し項目から次の検討候補を提案する。
+7. `ACCEPTANCE.md` と利用可能なテストで検品する。
+8. `PROJECT_STATUS.md` を次回そのまま再開できる状態へ更新する。
+9. Pull Request を review して `main` へ merge する。
+10. 自動更新された Preview を Control で確認する。
+11. lifecycle と公開先を Control で管理し、承認後に公開する。
 
 `carila-project.json` は Repository 契約および Control metadata の mirror です。manifest の編集によって公開状態を変更したり、release 方式を指定したりしません。
 
