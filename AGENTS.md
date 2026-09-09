@@ -57,6 +57,7 @@
 - 最小 static 作品はルートの `index.html` を公開ソースとする（`STATIC_SOURCE`）。
 - build 型へ移行する場合は `dist`、`build`、または `out` に成果物を生成し、Control が参照できるよう成果物を commit する（`STATIC_BUILD_OUTPUT`）。採用した出力先は実態に合わせる。
 - Worker 型へ移行する場合は Wrangler の設定および entrypoint を含む Cloudflare Workers の Repository 契約を満たす（`WORKER_APP`）。
+- Worker 型の `compatibility_date` は、**UTC基準で未来日にならない固定日**を設定する。JST等のローカル日付の「今日」をそのまま採用しない。新規設定・更新時は `new Date().toISOString().slice(0,10)` 以下であることをテストし、Cloudflareへ送る前に失敗させる。
 - Vercel 固有の設定や API を標準契約として追加しない。作品要件として明示された場合に限り検討する。
 
 ## lifecycle と manifest
