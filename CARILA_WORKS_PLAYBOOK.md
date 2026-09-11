@@ -136,3 +136,33 @@
 
 - **経験:** Harnessや進捗文書の更新だけでも、pathを区別しないpush webhookではPreview deployが発火し得る。
 - **一般化:** 自動deployのtriggerは「Repositoryが変わったか」ではなく「実行成果物へ影響するpathが変わったか」で判定し、docs・運用metadataだけの更新は不要なdeployから除外する。
+
+
+## 無記名投票BOXから得た共通知見（2026-09-11）
+
+- **経験:** unit / contract / runtime testが通っていても、公開後の実ユーザー経路でだけ失敗する箇所が残った。
+- **一般化:** 公開を伴う作品では、中核フローをproduction URLから実際に1件通し、保存先・後段処理・最終状態まで確認するProduction E2Eを公開完了条件に含める。コード上のテスト成功だけで「運用可能」と判定しない。
+
+- **経験:** GitHub Actionsのcronを指定時刻どおりに実行される前提にすると、自動収集が予定時刻を過ぎても動かないことがあった。
+- **一般化:** 外部schedulerは遅延・欠落し得る前提で設計する。時刻ぴったりを業務保証にせず、重要処理には複数回poll、別trigger、再実行可能性、未処理backlogを持たせる。自動化の正しさは「指定時刻」ではなく「最終的に取りこぼさず処理されること」で評価する。
+
+- **経験:** 一般ユーザーデータと公式収集データを同一DBに置くと、将来の誤参照・誤収集事故の境界が弱くなる。
+- **一般化:** 用途・同意・公開範囲が異なるデータ群は、必要ならtable分離だけでなくDB / binding自体を物理分離する。専用storageが未設定の時に別storageへfallbackせず、fail closedで停止する。
+
+- **経験:** 自動処理を複数段に分けた際、途中状態が見えないと「どこで止まったか」を追えない。
+- **一般化:** 自動pipelineは可能な範囲で raw / reviewed / pending / processed / result のように段階ごとの証跡を残し、入力・判定・送信・結果を後から追跡できるようにする。再実行時はidempotencyと重複防止を組み込む。
+
+- **経験:** service-to-service認証で長期固定Secretを増やさず、GitHub Actions OIDCで限定された自動ingest / exportを構成できた。
+- **一般化:** 外部実行基盤が短命identityを発行できる場合は、長期API keyの追加よりOIDC等の短命credentialを優先する。issuer / audience / repository / refなどを検証し、許可主体を最小化する。
+
+- **経験:** OGPはmeta tagを実装しただけでは不十分で、X側のcacheにより古い画像が残った。
+- **一般化:** OGP / Twitter Card等はproduction URLを実SNSまたはcrawler相当で確認する。画像URLは明示的な寸法・MIMEを持たせ、差し替え時はversioned asset URL等でcache更新を制御できるようにする。
+
+- **経験:** 共有URL自体が再入場手段になる匿名サービスでは、通常の「ホームへ戻る」がアクセス喪失につながり得た。
+- **一般化:** magic link / share URL / recovery codeなど「失うと戻れない情報」がアクセス権を担う作品では、離脱・logout・端末移行前に保存確認とcopy導線を用意する。内部IDや管理Secretは通常画面へ露出させない。
+
+- **経験:** Worker appのpreview health確認で、static asset fallbackが `/health` を飲み込み、正常なWorkerを異常扱いした。
+- **一般化:** deploy後health checkはadapter / app typeに合わせる。存在しない固定route一つだけを成功条件にせず、Worker存在・HTTP到達・期待HTML / API応答など、その配信方式で成立する観測点を使う。
+
+- **経験:** 自動投稿・自動収集は「動いた瞬間」だけでなく、停止指示まで継続運転できることが価値だった。
+- **一般化:** 長期自動運転機能は、手動操作なしで次周期へ進むこと、設定を勝手に再計算しないこと、停止方法が明確であること、外部依存が切れた時に復旧地点を特定できることまでを完成条件に含める。
