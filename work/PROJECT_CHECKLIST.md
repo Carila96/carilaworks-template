@@ -68,6 +68,8 @@
 - 外部API停止: UNREVIEWED
 - 部分失敗 / rollback: UNREVIEWED
 - ユーザー向けerror表示: UNREVIEWED
+- Production API route存在 / callerとのversion差: UNREVIEWED
+- 401/403のhealth・redirect・machine auth切り分け: UNREVIEWED
 
 ## 品質・テスト
 - 正常系: UNREVIEWED
@@ -80,6 +82,7 @@
 ## 運用・公開
 - 障害検知 / analytics: UNREVIEWED
 - scheduler遅延 / 欠落 / 再実行 / backlog: UNREVIEWED
+- event trigger + reconciliation poll / pending滞留監視: UNREVIEWED
 - 自動pipelineの段階別証跡 / idempotency: UNREVIEWED
 - 管理画面 / 問い合わせ: UNREVIEWED
 - version / migration運用: UNREVIEWED
