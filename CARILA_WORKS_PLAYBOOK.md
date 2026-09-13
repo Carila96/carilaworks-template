@@ -166,3 +166,17 @@
 
 - **経験:** 自動投稿・自動収集は「動いた瞬間」だけでなく、停止指示まで継続運転できることが価値だった。
 - **一般化:** 長期自動運転機能は、手動操作なしで次周期へ進むこと、設定を勝手に再計算しないこと、停止方法が明確であること、外部依存が切れた時に復旧地点を特定できることまでを完成条件に含める。
+
+
+## API route / 認証境界から得た共通知見（2026-09-13）
+
+- **経験:** 自動化側が新しいProduction API routeを呼び始めた時点で、Productionがまだ旧版だったため404になった。コードとworkflowが正しくても、callerとdeployed runtimeのversion差で失敗する。
+- **一般化:** 新しいAPI routeを自動処理から呼ぶ変更では、「route実装をmainへ入れる」ことと「Productionにそのrouteが存在する」ことを別条件として扱う。自動callerは404を恒久障害と決めつけず、pending/backlogを保持して安全に再試行できるようにし、Production更新後に回復できることを検証する。
+- **検品:** 自動workflowを有効化する前後に、対象Production URLで新routeの存在確認を行い、旧版Productionを叩いた場合にもデータを失わず再実行できることを確認する。
+
+- **経験:** 認証付き画面へのroot redirectやhealth check契約の不一致で、正常なappでも401/403を返し、deployや監視が失敗扱いになることがあった。
+- **一般化:** 401/403は「Secretが間違っている」と即断せず、①health checkが未認証で到達すべきrouteか、②redirect後にprotected routeへ入っていないか、③service-to-service credentialのissuer/audience/repository/refが一致するか、④人間向け認証と機械向けhealth/API認証を混同していないかを順番に切り分ける。公開入口・health endpoint・protected admin/APIの認証契約を明文化する。
+- **検品:** Production E2Eでは200だけでなく、期待routeの404、未認証healthの401/403、redirect chainを明示的に検査し、誤ったroute/auth契約を公開前に検出する。
+
+- **経験:** push triggerだけのinbox処理では、一時的な404/401/5xxやscheduler欠落でpendingが残ったままになる可能性がある。
+- **一般化:** 長期自動運転pipelineは push/event trigger に加えて低頻度のreconciliation pollを持ち、pending滞留、直近失敗後の後続成功有無、最終成功時刻を監視する。失敗履歴そのものではなく「回復していない失敗」を異常と判定する。
