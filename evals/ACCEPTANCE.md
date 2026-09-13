@@ -13,6 +13,8 @@
 - [ ] `carila-project.json` がRepositoryの実態と矛盾していない。
 - [ ] `work/PROJECT_STATUS.md` が現在の実装状態と一致している。
 - [ ] 公開・deploy・DNS・課金・破壊的操作を、明示承認なしに実行していない。
+- [ ] 新規Production API routeを自動処理が利用する場合、Production上のroute存在と、未反映時にpending/backlogから安全に再試行できることを確認した。
+- [ ] health / public入口 / protected admin・APIの認証契約を確認し、想定外の401/403やredirect chainがないことを確認した。
 
 ## 作品固有Acceptance
 
