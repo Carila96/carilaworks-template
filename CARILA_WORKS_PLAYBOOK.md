@@ -52,6 +52,29 @@
 - ユーザー増加時にコストが急増する箇所はないか。
 - 収益性だけでなく、自走性・維持コスト・寿命・他サービスとの分散効果を見たか。
 
+
+## Growth・Distribution・収益化
+
+公開済み作品は「作れたか」だけでなく、次の5段階のどこが最大ボトルネックかを確認する。
+
+1. **Discovery** — 未来の顧客の視界に入っているか
+2. **Appeal** — 見た瞬間に「試したい理由」が伝わるか
+3. **Activation** — 最初の価値体験まで迷わず進めるか
+4. **Monetization** — 価値を支払いへ変換する導線があるか
+5. **Retention** — 再訪・継続利用する理由があるか
+
+Distributionは1つのSNSだけに依存せず、作品に合う以下の3経路を一度は検討する。
+
+- **Push** — X / Threads / 動画 / community / creator outreachなど、こちらから届ける経路。
+- **Pull** — SEO / marketplace / directory / discovery platformなど、探している人に見つかる経路。
+- **Loop** — share / referral / 公開結果 / UGCなど、利用者が次の利用者を連れてくる経路。
+
+収益化対象の作品では、可能なら「露出 → 興味 → 初回体験 → Checkout → Purchase」を分離して計測する。
+CARILA WORKS Controlへ匿名集計を自動連携する場合は、任意の共通契約 `GET /api/carila-business-metrics`（schemaVersion 1.0）を利用できる。未対応でも作品の公開を妨げない。
+公開Metricsにはraw event、個人情報、Secret、非公開の売上額を含めない。売上額の自動集約が必要な場合は別途認証付き経路を設計する。
+
+買い切り・低単価商品は有効な収益化実験になり得るが、価格を下げることをDiscovery不足の代替にしない。価値が一度で完結する、成果物をすぐ受け取れる、subscription理由が弱い等の条件で検討する。
+
 ## 法務・公開ルール
 
 - 利用規約が必要か。
