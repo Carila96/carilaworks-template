@@ -39,6 +39,16 @@
 - 決済・解約・返金: UNREVIEWED
 - API / hosting / DB等の継続コスト: UNREVIEWED
 
+## Growth・Distribution
+- Discovery（未来の顧客の視界に入る経路）: UNREVIEWED
+- Appeal（価値・新規性・利用理由の訴求）: UNREVIEWED
+- Activation（最初の価値体験までの導線）: UNREVIEWED
+- Push / Pull / Loopの発見経路: UNREVIEWED
+- Monetization funnel計測: UNREVIEWED
+- Retention / 再訪理由: UNREVIEWED
+- CARILA Business Metrics標準endpoint: UNREVIEWED
+- 低単価 / 買い切り収益化の適性: UNREVIEWED
+
 ## 法務
 - 利用規約: UNREVIEWED
 - プライバシーポリシー: UNREVIEWED
