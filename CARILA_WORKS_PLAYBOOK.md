@@ -203,3 +203,24 @@ CARILA WORKS Controlへ匿名集計を自動連携する場合は、任意の共
 
 - **経験:** push triggerだけのinbox処理では、一時的な404/401/5xxやscheduler欠落でpendingが残ったままになる可能性がある。
 - **一般化:** 長期自動運転pipelineは push/event trigger に加えて低頻度のreconciliation pollを持ち、pending滞留、直近失敗後の後続成功有無、最終成功時刻を監視する。失敗履歴そのものではなく「回復していない失敗」を異常と判定する。
+
+
+## HaloPaletteから得た共通知見（2026-09-18）
+
+- **経験:** 同一アプリにカテゴリ・ブランド・媒体違いの派生画面を追加した際、見た目を似せても管理カード、複数選択、確定単位、遷移先などの操作が分岐し、ユーザーがカテゴリごとに学び直す状態になった。
+- **一般化:** データ集合だけが違う派生画面は、追加前に共通Interaction Contractを定義する。タップ後の遷移、複数選択可否、確定単位、管理カード、検索、破壊操作までAcceptanceで固定し、カテゴリ固有差はデータ・属性表示へ閉じ込める。
+
+- **経験:** 既存画面へ後付けscriptで挙動を重ねた結果、古いlistenerが先に発火したり、capture/bubble順序の競合で「コードはあるのに実機挙動が変わらない」状態が起きた。
+- **一般化:** 段階的UI migrationやenhancementではDOM差分だけでなくイベント伝播順まで検品する。旧挙動を無効化する必要があるなら、元handlerを削除するか、所有するpointer/eventだけを明示して処理し、二重実装を長期化させない。
+
+- **経験:** 2D用のpointer capture補正がpointerup/cancelを無条件に消費し、同じDOMを使う3D dragの終了処理まで止めた。
+- **一般化:** 同一DOMで複数gesture/modeを共存させる場合、listenerは「自分が開始・追跡したpointer」だけをconsumeする。pointerdown→move→up/cancelの全経路で、他モードのlifecycleを遮断しないことを実機Acceptanceに含める。
+
+- **経験:** pointermoveで回転stateを更新していてもdrag中にrenderしていないと、指には追従せず、release後に蓄積したstateだけが遅れて動いて見えた。
+- **一般化:** drag/pan/rotateの完成条件はstate更新ではなく「gesture中の各frameに描画が反映されること」。慣性はrelease後の補助であり、live responseの代替にしない。
+
+- **経験:** canvas上の1,000〜2,000超の小さな半透明背景点を毎frame配列化・depth sort・個別animationすると、モバイルで体感ラグが出た。
+- **一般化:** 視覚寄与が小さい装飾点群は毎frame sortを避けて直接描画し、depth順が意味を持つ主オブジェクトだけsortする。静的な装飾よりgestureのフレームレートを優先する。
+
+- **経験:** モバイル管理カードで「削除」と「閉じる」が近接すると誤操作リスクが高く、横幅を持て余した縦積みUIも操作効率が悪かった。
+- **一般化:** destructive actionとdismiss actionは空間的・視覚的に分離する。dismissはheaderの×、deleteはカード下端など役割ごとに固定し、状態操作は2列等で横幅を活用する。モバイルでは見た目の整列より誤タップ回避を優先する。
