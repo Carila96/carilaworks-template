@@ -12,7 +12,22 @@
 - GitHub Actionsは通常の編集・branch・PR・Mergeには使わず、CI/build/test/deploy/schedule等workflow実行が必要な用途に限定する。
 
 ## GitHub操作の強制ゲート
-Repository作業開始時は原則connectorで以下を確認する。
+
+### 0. Tool Discovery Gate（最優先）
+GitHubに関係する依頼では、最初の実行行動としてGitHub connectorの利用可能ツールを確認する。少なくともRepository read、file read、branch作成、file update、PR作成、Mergeに対応するconnector actionが利用可能かを確認する。
+
+この確認が終わる前に、GitHub操作可否についてユーザー向けの結論を返してはならない。
+
+特に以下を禁止する:
+- 「connectorがない」と推測で言う
+- container / git clone / shell / browser等を先に試し、その失敗からGitHub不可と判断する
+- 利用可能tool一覧を確認せず「このセッションではMergeできない」と言う
+- 過去ターンでconnectorを使えていたにもかかわらず、現ターンで再確認せず利用不能と断定する
+
+GitHub connectorの存在確認は「記憶」や「画面に見えているtool説明」ではなく、現ターンのtool discovery / 利用可能action確認を根拠にする。
+
+### 1. Repository Reality Gate
+Tool Discovery Gate通過後、Repository作業開始時はconnectorで以下を確認する。
 1. Repository metadata
 2. latest main
 3. 対象branch
@@ -21,9 +36,17 @@ Repository作業開始時は原則connectorで以下を確認する。
 6. mainとの差分
 7. 必要時PRのstate / merged
 
-書き込み依頼では、branch作成、file update、PR作成/更新、Mergeがconnectorで可能か実際に確認する。
+### 2. Write Capability Gate
+書き込み依頼では、branch作成、file update、PR作成/更新、Mergeがconnectorで可能か実際に確認する。read成功だけでwrite可否を推測しない。
 
-「GitHubへ書き込めない」「PRを作れない」「Mergeできない」「この環境では実行不能」「ユーザー側で作業が必要」と答える前に、必ず同一ターン内でconnectorを直接確認する。connector未確認でGitHub操作不能と結論づけることを禁止する。
+### 3. Negative Claim Evidence Gate
+「GitHubへ書き込めない」「branchを作れない」「PRを作れない」「Mergeできない」「connectorがない」「この環境では実行不能」「ユーザー側で作業が必要」と答える場合は、同一ターン内で以下の証拠が必要:
+1. Tool Discovery Gateを実行済み
+2. Repository Reality Gateを実行済み
+3. 書き込み依頼ならWrite Capability Gateを実行済み
+4. 実際に失敗したconnector actionとエラー内容がある
+
+上記4条件を満たさない否定回答は禁止する。未確認の場合は「できない」と言わず、connector確認を続行する。
 
 git cloneやDNS等が失敗しても、その経路だけの失敗として扱う。connectorが使えるならconnectorへ切り替え、作業を継続する。
 
@@ -168,3 +191,17 @@ connector確認なしに以下を結論づけない。
 - 過去チャット不可 -> ユーザー再説明必須
 
 上記の場合はまずconnectorとRepository文書から実状態を復元する。connectorで操作可能な限りGitHub作業を継続する。
+
+
+## GitHub可否判定の機械的チェック
+GitHub関連ターンの自己検品として、ユーザー向け返答前に以下をすべて満たす。
+- [ ] 現ターンでGitHub connector action一覧または該当actionの存在を確認した
+- [ ] Repository metadata / latest main / Open PRをconnectorで取得した
+- [ ] 対象ファイルをconnectorで読んだ
+- [ ] 書き込み依頼ならbranch/file update/PR/Mergeのwrite capabilityを実操作で確認した
+- [ ] 「できない」と言う場合、connector上の具体的失敗証拠がある
+- [ ] 完了報告ならlatest main / PR state / mergedを最後に再取得した
+
+1つでも未達なら、GitHub可否や完了を断定しない。
+
+注意: このRepository文書やプロジェクト指示は実行規律を最大限強制するためのものだが、会話モデルの挙動を技術的に100%拘束するサンドボックス機構ではない。完全な強制には、ChatGPTランタイム側で「GitHub否定回答の前にconnector preflight必須」とするsystem/developer-level gate、またはGitHub操作を単一のpreflight付きtool wrapperへ集約する実行基盤が必要。ユーザー設定でそこまでのhard enforcementが提供されない環境では、上記Gate + Repository Harness + 完了前再確認を最強の運用防止策とする。

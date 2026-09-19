@@ -37,6 +37,13 @@
 - このAGENTS.mdの要約と詳細ルールが競合する場合は、より新しい実Git状態と確定仕様を確認したうえで `docs/CARILA_WORKS_EXECUTION_RULES.md` を優先して適用する。
 - 詳細ルールを読まずに、container/git clone等の補助経路だけでGitHub操作可否を判断してはならない。
 
+## GitHub Tool Discovery Gate
+
+GitHubに関係する依頼では、最初の実行行動として認証済みGitHub connectorの利用可能actionを確認する。
+Repository read / file read / branch / file update / PR / Merge相当のactionが現ターンで利用可能か確認する前に、「connectorがない」「GitHub操作不可」「Merge不可」と結論づけてはならない。
+GitHub可否の否定回答には、同一ターン内のconnector discovery、Repository確認、必要なwrite actionの実失敗証拠を必須とする。
+container / git clone / DNS / shell / browserの失敗はこのGateの代替にならない。
+
 ## GitHub 操作可否の判定
 
 CARILA WORKSの実装・修正タスクで、GitHub操作が必要な場合は「使えない」と推測で判断しない。特に、container / shell / git clone / DNS / browser / web / raw URL など一つの経路が失敗しただけで、GitHub全体を利用不能と扱わない。
