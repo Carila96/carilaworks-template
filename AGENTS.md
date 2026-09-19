@@ -6,18 +6,19 @@
 
 長期制作で文脈・決定・現在地を失わないため、依頼に関係する Harness 文書を確認してください。
 
-1. `PROJECT_BRIEF.md` — 企画から渡された作品要件の原文。勝手に要約して置き換えない。
-2. `CARILA_WORKS_PLAYBOOK.md` — CARILA WORKS全体で蓄積した制作経験と、毎作品で一度は検討したい論点。
-3. `docs/CONSTITUTION.md` — 作品の目的、守る価値、変えてはいけない原則。
-4. `docs/REQUIREMENTS.md` — ユーザーと合意済みの確定仕様。
-5. `docs/DECISIONS.md` — 重要な決定と、その理由・代替案。
-6. `docs/UNRESOLVED.md` — 未確定事項。ここにある内容を推測で確定しない。
-7. `work/ROADMAP.md` — 現在の制作計画と段階。
-8. `work/CURRENT_TASK.md` — 今回取り組む範囲、完了条件、対象外。
-9. `work/PROJECT_CHECKLIST.md` — Playbook項目をこの作品でどう扱うか。
-10. `work/PLAYBOOK_CANDIDATES.md` — この作品で得た、他作品へ還元できそうな経験値候補。
-11. `work/PROJECT_STATUS.md` — 現在地、完了済み、次の作業、引き継ぎ情報。
-12. `evals/ACCEPTANCE.md` — 完成と判定するための検品条件。
+1. `docs/CARILA_WORKS_EXECUTION_RULES.md` — GitHub操作、制作フロー、再開、中断復旧、指示忠実性、完了報告の詳細実行ルール。CARILA WORKS作業では必ず従う。
+2. `PROJECT_BRIEF.md` — 企画から渡された作品要件の原文。勝手に要約して置き換えない。
+3. `CARILA_WORKS_PLAYBOOK.md` — CARILA WORKS全体で蓄積した制作経験と、毎作品で一度は検討したい論点。
+4. `docs/CONSTITUTION.md` — 作品の目的、守る価値、変えてはいけない原則。
+5. `docs/REQUIREMENTS.md` — ユーザーと合意済みの確定仕様。
+6. `docs/DECISIONS.md` — 重要な決定と、その理由・代替案。
+7. `docs/UNRESOLVED.md` — 未確定事項。ここにある内容を推測で確定しない。
+8. `work/ROADMAP.md` — 現在の制作計画と段階。
+9. `work/CURRENT_TASK.md` — 今回取り組む範囲、完了条件、対象外。
+10. `work/PROJECT_CHECKLIST.md` — Playbook項目をこの作品でどう扱うか。
+11. `work/PLAYBOOK_CANDIDATES.md` — この作品で得た、他作品へ還元できそうな経験値候補。
+12. `work/PROJECT_STATUS.md` — 現在地、完了済み、次の作業、引き継ぎ情報。
+13. `evals/ACCEPTANCE.md` — 完成と判定するための検品条件。
 
 すべてを毎回書き換えない。今回の変更によって事実が変わった文書だけを、実装と同じ変更の中で更新する。
 
@@ -29,6 +30,12 @@
 - チャットが長くなったことを理由に分岐だけへ依存しない。継続性が不安定になった場合は、まず現在地をRepositoryへ記録してから完全な新規チャットへ移行できる状態にする。
 - `work/PROJECT_STATUS.md` には最低限、現在のbranch、現在地、完了済み、現在の作業、直近の重要変更、検証状況、ブロッカー/未確定、次にやる具体的な作業、再開時の注意点を保持する。
 - 記録は会話の逐語録にしない。次の担当AIが過去チャットを読まなくても、何が事実として完了し、何が未完了で、次に何を確認・実行すべきか判断できる粒度にする。
+
+## 実行ルールの正本
+
+- GitHub操作、作業継続、再開、中断復旧、ユーザー指示への忠実性、Actionsとの役割分離、完了報告の詳細は `docs/CARILA_WORKS_EXECUTION_RULES.md` を正本とする。
+- このAGENTS.mdの要約と詳細ルールが競合する場合は、より新しい実Git状態と確定仕様を確認したうえで `docs/CARILA_WORKS_EXECUTION_RULES.md` を優先して適用する。
+- 詳細ルールを読まずに、container/git clone等の補助経路だけでGitHub操作可否を判断してはならない。
 
 ## GitHub 操作可否の判定
 

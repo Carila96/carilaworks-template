@@ -55,3 +55,11 @@
 - SEO baseline: title / description / canonical / OGP / lang / noindex / robots.txt / sitemap.xml / JSON-LD / 必要時hreflang。
 - Analytics停止時に作品本体を止めないbest-effortを標準化。
 - 個人情報や入力本文をAnalyticsへ保存しない。
+
+
+## 2026-09-19 — 詳細Execution RulesのRepository正本化
+- プロジェクト指示の文字数制約に依存しないよう、詳細作業規律を `docs/CARILA_WORKS_EXECUTION_RULES.md` へ永続化。
+- GitHub connector-first、GitHub操作不能判定の強制ゲート、Mergeまでの標準フロー、途中停止禁止、中断復旧、PROJECT_STATUS運用、ユーザー指示忠実性、GitHub Actionsとの役割分離、完了報告を明文化。
+- `AGENTS.md` のHarness読み順先頭へ追加し、CARILA WORKS作業では必須参照とした。
+- `CARILA_WORKS_PLAYBOOK.md` は経験知・検討観点、Execution Rulesは実行手順の正本として役割を分離。
+- 既存作品へのTemplate変更は無条件一括反映しない。
