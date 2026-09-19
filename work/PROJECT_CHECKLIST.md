@@ -49,6 +49,19 @@
 - CARILA Business Metrics標準endpoint: UNREVIEWED
 - 低単価 / 買い切り収益化の適性: UNREVIEWED
 
+## Analytics・検索発見性
+- CARILA匿名Analytics導入: UNREVIEWED
+- 流入元 / UTM / referrer計測: UNREVIEWED
+- 再訪 / session計測: UNREVIEWED
+- PWA standalone起動 / install計測: UNREVIEWED
+- 主要Activation event: UNREVIEWED
+- 外部link / affiliate click計測: UNREVIEWED
+- title / description / canonical: UNREVIEWED
+- OGP / html lang / noindex確認: UNREVIEWED
+- robots.txt / sitemap.xml: UNREVIEWED
+- JSON-LD構造化データ: UNREVIEWED
+- 多言語hreflang（該当時）: UNREVIEWED
+
 ## 法務
 - 利用規約: UNREVIEWED
 - プライバシーポリシー: UNREVIEWED
