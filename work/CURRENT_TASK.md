@@ -8,7 +8,7 @@ CARILA WORKS全体の詳細実行ルールをRepository側へ永続化し、短�
 - AGENTS.md のHarness読み順先頭へexecution rulesを追加し、詳細ルールの正本として参照。
 - CARILA_WORKS_PLAYBOOK.md からexecution rulesへリンク。
 - PROJECT_STATUSを更新。
-- PR作成・Merge。
+- PR #11 Merge済み。merge commit: `a0cfe707e12899bee37e3788235484e80ee08565`。
 
 ## 完了条件
 - 詳細実行ルールがmainへMerge済み。
