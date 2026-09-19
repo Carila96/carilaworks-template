@@ -63,3 +63,7 @@
 - `AGENTS.md` のHarness読み順先頭へ追加し、CARILA WORKS作業では必須参照とした。
 - `CARILA_WORKS_PLAYBOOK.md` は経験知・検討観点、Execution Rulesは実行手順の正本として役割を分離。
 - 既存作品へのTemplate変更は無条件一括反映しない。
+
+## 2026-09-19 — Execution Rules merge
+- PR #11 `Persist CARILA WORKS execution rules` Merge済み。
+- merge commit: `a0cfe707e12899bee37e3788235484e80ee08565`。
