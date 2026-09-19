@@ -30,6 +30,25 @@
 - `work/PROJECT_STATUS.md` には最低限、現在のbranch、現在地、完了済み、現在の作業、直近の重要変更、検証状況、ブロッカー/未確定、次にやる具体的な作業、再開時の注意点を保持する。
 - 記録は会話の逐語録にしない。次の担当AIが過去チャットを読まなくても、何が事実として完了し、何が未完了で、次に何を確認・実行すべきか判断できる粒度にする。
 
+## GitHub 操作可否の判定
+
+CARILA WORKSの実装・修正タスクで、GitHub操作が必要な場合は「使えない」と推測で判断しない。特に、container / shell / git clone / DNS / browser / web / raw URL など一つの経路が失敗しただけで、GitHub全体を利用不能と扱わない。
+
+GitHub操作不能と報告する前に、対象Repositoryに対して認証済みのGitHub connector / GitHub API経路で、最低限以下を直接確認する。
+
+1. Repository metadataを取得できるか。
+2. default branchの最新commitを取得できるか。
+3. Open PRを取得できるか。
+4. 対象ファイルを1つ以上読めるか。
+5. 書き込みを伴う依頼では、通常の作業branch作成など安全なwrite操作を実際に試し、権限拒否かどうかを確認する。
+
+判定ルール:
+- 上記のGitHub直接経路が成功している限り、containerや別経路の失敗を理由に「GitHub操作不可」「Merge不可」と報告しない。
+- 書き込み権限が必要な作業では、read成功だけでなくwrite経路まで確認してから可否を判断する。
+- 本当にblockedの場合は、失敗した経路・操作・権限エラーを具体的に `work/PROJECT_STATUS.md` へ残す。
+- 複数のGitHub経路がある場合、Repository操作の正本は認証済みGitHub connector / GitHub API経路とする。
+- 実装依頼でGitHub操作が可能なら、原因特定→修正→検証→文書更新→PR→Mergeまでを一続きで進める。
+
 ## 制作
 
 - `PROJECT_BRIEF.md` を企画から渡された作品要件の正として扱い、`docs/REQUIREMENTS.md` を合意済み仕様の正として扱う。両者が矛盾する場合は勝手に解釈せずユーザーへ確認する。
