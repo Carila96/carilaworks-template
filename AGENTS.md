@@ -48,6 +48,8 @@ GitHub操作不能と報告する前に、対象Repositoryに対して認証済�
 - 本当にblockedの場合は、失敗した経路・操作・権限エラーを具体的に `work/PROJECT_STATUS.md` へ残す。
 - 複数のGitHub経路がある場合、Repository操作の正本は認証済みGitHub connector / GitHub API経路とする。
 - 実装依頼でGitHub操作が可能なら、原因特定→修正→検証→文書更新→PR→Mergeまでを一続きで進める。
+- ツール呼び出し・ストリーミング・表示が途中で中断した後は、見えている会話状態から作業の成否を推測しない。ユーザーへ「未完了」「失敗」「Mergeされていない」と答える前に、latest main、対象branchとの差分、Open PR、対象PRのstate/mergedをGitHub connectorで再取得して実状態を確認する。
+- PR作成が422等で失敗した場合は、同じhead branchの既存PRを検索して状態を確認する。既存PRがMerge済みなら新規作成せず、そのMergeを正として扱う。
 
 ## 制作
 
