@@ -145,6 +145,14 @@ CARILA WORKS Controlへ匿名集計を自動連携する場合は、任意の共
 - 公開範囲と検索エンジンindex可否が意図通りか。
 - 利用規約・privacy・問い合わせ等、必要と判断した公開情報へ到達できるか。
 
+## Repository操作能力の確認
+
+- **経験:** containerの `git clone`、DNS、browser、raw URL等の一経路が失敗しただけで「このセッションではGitHub操作できない」と判断すると、実際には認証済みGitHub connectorが利用可能でも作業を止めてしまう。
+- **一般化:** Repository操作可否は、その操作を担う認証済みGitHub connector / API経路を直接試して判定する。別経路の失敗をGitHub全体の失敗へ一般化しない。
+- **必須確認:** 「GitHub操作不可」「Merge不可」と報告する前に、Repository metadata、default branch最新commit、Open PR、対象ファイルreadを確認する。書き込み依頼では通常の作業branch作成等のsafe writeも実際に試す。
+- **blocked判定:** connector/API側の認証・権限・service failureが確認できた場合に限りblockedとし、失敗した操作とエラーをRepositoryのstatus/handoffへ記録する。
+- **目的:** 会話内の決意ではなく、次のAI・別セッション・別作品でも同じ確認手順を再現できるようにする。
+
 ## 経験値の追加ルール
 
 新しい項目を追加するときは、単発の作品固有事情ではなく、今後の別作品でも再発し得る形へ一般化する。
