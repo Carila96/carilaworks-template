@@ -70,3 +70,101 @@ ChatGPT担当は原則Mergeまで。Production公開はユーザーがControlか
 - branch/latest main/Open PR/mainとの差分/実コード/必要時PR state・merged
 
 作品固有の読み順にも従う。引き継ぎ文だけを最新状態と断定せずRepository実状態を取り直す。文書と実コードが矛盾する場合は事実に合わせて文書も修正する。
+
+
+## PROJECT_STATUS.md
+work/PROJECT_STATUS.mdを作品の現在地の正本とする。作業終了時だけでなく、branch変更、実装完了、原因特定、方針確定、test/build結果、PR、Merge、仕様変更、blocker発生・解消、次作業変更、重要判断、移行前など、次セッションの判断が変わる時点で随時更新する。
+
+最低限、最終更新、現在branch、現在地、完了済み、現在作業、直近重要変更、PR/Merge状況、検証状況、blocker/未確定、次の具体作業、再開時注意/Handoffを保持する。逐語録は保存しない。次の担当AIが過去チャットなしで再開できる粒度にする。Merge後は可能な限り同一作業内でPR/Merge状況もmain実態へ合わせる。
+
+## 新しいチャット・分岐再開
+新規チャット、分岐、別セッションでは、ユーザーに再説明を求める前にconnectorでRepositoryから復元する。
+確認順:
+1. work/PROJECT_STATUS.md
+2. work/CURRENT_TASK.md
+3. 関連Harness
+4. latest main
+5. 対象branch
+6. Open PR
+7. PR state / merged
+8. 実コード
+9. mainとの差分
+
+その上で前回の続きから開始する。新チャットだけを理由にCodex用引き継ぎ文を作らない。ユーザー提供の引き継ぎ文も最新状態とは断定せずGitHubで確認する。
+
+## 長いチャットからの移行
+チャットが重い、表示不安定、context上限接近等の場合は分岐だけに依存しない。移行前に実Git状態確認、PROJECT_STATUS更新、必要に応じCURRENT_TASK/DECISIONS/UNRESOLVED/REQUIREMENTS更新、GitHub反映、latest main/Open PR/PR state/merged再確認を行い、新規チャットからRepositoryだけで再開可能にする。
+
+## ストリーミング・ツール中断時
+ストリーミング、tool実行、返答表示が中断しても作業失敗・未完了と推測しない。回答再開前にconnectorでlatest main、対象branch、mainとの差分、Open PR、対象PR state/mergedを再取得する。
+PR作成時に422、already exists、validation failed等が出ても即失敗としない。同一head branchの既存PRを検索し、Open/Closed/Merged、main反映済みかを確認する。
+会話上の発言よりGitHub実状態を正とする。
+
+## 既存作品
+Template更新前の既存作品にも、このAI副業プロジェクト内で作業する場合は同じ制作フローを適用する。PROJECT_STATUSがあれば最新化し、なければ既存構造とAGENTSを確認して仕様を壊さず現在地永続化を整える。Template変更を既存作品へ無条件一括反映しない。既存作品でもGitHub操作の標準経路はconnectorとする。
+
+## Learning Loop
+他作品にも再利用可能なbug、原因、回避策、設計原則、test観点、UI/運用/deploy失敗、GitHub connector/container/Actions経路の失敗は既存Learning Loopへ記録する。作品固有事情と一般化知見を分ける。一経路の失敗をシステム全体の不能と誤認した事例は再発防止対象とする。
+
+## 判断の優先順位
+1. 実コード・Git状態・実環境
+2. docs/REQUIREMENTS.md等の確定仕様
+3. work/PROJECT_STATUS.md
+4. docs/DECISIONS.md
+5. その他Repository文書
+6. 現在会話
+7. 過去会話記憶
+
+Git状態はGitHub上の実状態を優先し、古いlocal cloneを最新GitHubより優先しない。現在会話で明示的仕様変更があれば新指示を反映し、Repository文書も更新する。
+
+## ユーザー指示への忠実性
+具体的修正指示はまずその内容をそのまま実装する。
+
+禁止:
+- 指定変更を実装せず別解へ置換する
+- 依頼外UI変更やrefactorを混ぜる
+- 指定変更を弱め、見た目上ほぼ分からない状態で完了扱いする
+- 実装前に提案だけ返して終了する
+- 求められていない画像生成、mock生成、Codex文章へすり替える
+- 「まず試す」と言いながらRepositoryを変更せず終了する
+
+「これだけ変更」「それ以外を変えない」は厳守する。視覚変更はコード上に値があるだけで完了とせず、ユーザー指定の視覚差が実際に見えることをAcceptanceとする。変更量が小さすぎて実機上ほぼ判別できない場合は要求を満たしたと扱わない。対象外のUI、機能、data、挙動を変更しない。
+
+## GitHub connectorとActionsの役割分離
+GitHub connectorの主用途:
+- Repository確認
+- file read/update
+- branch
+- commit相当
+- PR作成/確認
+- Merge
+- latest main確認
+
+GitHub Actionsの主用途:
+- CI
+- automated test
+- build
+- scheduled job
+- deploy workflow
+- 定期収集/投稿
+- その他runner上のworkflow
+
+通常修正やPR/Mergeのため不要なActions workflowを新設しない。Actions利用量削減時はconnectorで直接可能なRepository操作をActionsへ回さない。ただしcommit/PRを契機に既存workflowが自動起動する場合、そのActions消費は別問題として扱う。
+
+## 完了報告
+予定ではなく実結果を報告する。必要に応じ、原因、修正、検証、branch、PR、Merge、latest main、PROJECT_STATUS更新、ユーザー次操作を簡潔に示す。
+Merge後の通常操作はCARILA WORKS Controlで公開版更新。Codex用文章を次工程にしない。
+完了報告前にconnectorでlatest main、Open PR、対象PR state/mergedを再取得し、最後に取得したGitHub実状態を根拠とする。
+
+## 絶対に避ける判断
+connector確認なしに以下を結論づけない。
+- git clone失敗 -> GitHub不可
+- DNS失敗 -> Repository変更不可
+- browser失敗 -> PR不可
+- shell不可 -> Merge不可
+- tool中断 -> 作業失敗
+- PR 422 -> PR失敗
+- 新チャット -> 状況不明
+- 過去チャット不可 -> ユーザー再説明必須
+
+上記の場合はまずconnectorとRepository文書から実状態を復元する。connectorで操作可能な限りGitHub作業を継続する。
