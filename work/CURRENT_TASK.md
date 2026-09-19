@@ -10,7 +10,7 @@ GitHub connectorを使えるのに「connectorがない」「Mergeできない�
 - AGENTS.mdへ最初の実行行動としてTool Discovery Gateを追加。
 - 返答前の機械的self-checkを追加。
 - text instructionだけでは100% hard enforcementできず、完全強制にはruntime/system/tool wrapperが必要であることを明記。
-- PR作成・Mergeまで行う。
+- PR #13 Merge済み。merge commit: `82af9bcb81917c2c1f317b508c25b4f06d84bda3`。
 
 ## 完了条件
 - mainへMerge済み。

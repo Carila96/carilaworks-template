@@ -75,3 +75,7 @@
 - 否定回答はTool Discovery + Repository Reality + Write Capability + 実connector errorの証拠が揃う場合のみ許可。
 - container/git clone/DNS等の補助経路失敗は否定根拠として無効。
 - Repository/projet instructionsだけではmodel runtimeを100%技術拘束できないため、完全なhard enforcementにはsystem/developer-level gateまたはpreflight付きtool wrapperが必要と明記。
+
+## 2026-09-19 — GitHub preflight gate merge
+- PR #13 `Harden GitHub connector preflight gate` Merge済み。
+- merge commit: `82af9bcb81917c2c1f317b508c25b4f06d84bda3`。
