@@ -75,6 +75,46 @@ CARILA WORKS Controlへ匿名集計を自動連携する場合は、任意の共
 
 買い切り・低単価商品は有効な収益化実験になり得るが、価格を下げることをDiscovery不足の代替にしない。価値が一度で完結する、成果物をすぐ受け取れる、subscription理由が弱い等の条件で検討する。
 
+
+## Analytics・検索発見性
+
+公開作品では、可能な限り作品固有の思い込みではなく実測で改善判断できるよう、匿名利用計測を検討する。
+
+CARILA WORKS標準の匿名Analyticsを使う場合は、Controlが配信する共通clientを利用し、最低限以下を観測候補とする。
+
+- page_view
+- 流入元（UTM / referrer）
+- session / 再訪
+- PWA standalone起動
+- install event（取得可能browserのみ）
+- 外部link click
+- share
+- 作品固有の主要Activation event
+
+個人情報、email、氏名、入力本文、健康情報等をAnalytics eventへ混ぜない。
+visitor / session IDを利用する場合も、Control側へraw IDを永続保存せず匿名集計目的に限定する。
+計測基盤が停止しても作品本体を止めないbest-effort設計を優先する。
+
+PWAの「ホーム画面に追加」はbrowser差がある。
+Chromium系では `appinstalled` を取得できる場合があるが、iOS Safariでは追加操作そのものをWeb側で直接取得できない。
+iOSでは `navigator.standalone` / `display-mode: standalone` による「ホーム画面追加後の実起動」を利用指標とする。
+
+検索流入を作る作品では、最低限以下を一度確認する。
+
+- 意図が伝わる `<title>`
+- 検索結果向けdescription
+- production canonical URL
+- OGP / Twitter Card
+- `<html lang>`
+- noindexが意図せず残っていない
+- `robots.txt`
+- `sitemap.xml`
+- 内容に合うJSON-LD構造化データ
+- 日本語 / 英語等の多言語ページが独立URLを持つ場合はhreflang
+
+SEOはmeta tagを置くだけで完了扱いせず、「誰が何を検索した時にこの作品へ来るのか」という検索意図とページ内容を一致させる。
+大量の低品質keywordページを作ることをSEO施策としない。
+
 ## 法務・公開ルール
 
 - 利用規約が必要か。
