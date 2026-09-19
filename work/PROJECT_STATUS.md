@@ -46,3 +46,12 @@
 - lifecycle と制作進捗を混同しない。
 - 公開操作はユーザー承認後にControlから行う。
 - 過去チャットの全文再現を前提にしない。ここにない重要事項を会話記憶だけで補完しない。
+
+
+## 2026-09-19 — Analytics / SEO baseline標準化
+
+- CARILA WORKS標準として匿名AnalyticsとGoogle検索準備の確認項目をPlaybook / Checklistへ追加。
+- PWAはChromium系appinstalledと、iOSを含むstandalone起動を区別して扱う。
+- SEO baseline: title / description / canonical / OGP / lang / noindex / robots.txt / sitemap.xml / JSON-LD / 必要時hreflang。
+- Analytics停止時に作品本体を止めないbest-effortを標準化。
+- 個人情報や入力本文をAnalyticsへ保存しない。
