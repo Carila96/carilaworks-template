@@ -67,3 +67,11 @@
 ## 2026-09-19 — Execution Rules merge
 - PR #11 `Persist CARILA WORKS execution rules` Merge済み。
 - merge commit: `a0cfe707e12899bee37e3788235484e80ee08565`。
+
+
+## 2026-09-19 — GitHub Tool Discovery Gate強化
+- connectorが実際には利用可能なのに「connectorがない」「Mergeできない」と誤判定した再発事例を受け、Execution Rules / AGENTSを強化。
+- GitHub関連依頼の最初の実行行動をTool Discovery Gateとし、現ターンでRepository read / file read / branch / update / PR / Merge相当actionの存在確認を必須化。
+- 否定回答はTool Discovery + Repository Reality + Write Capability + 実connector errorの証拠が揃う場合のみ許可。
+- container/git clone/DNS等の補助経路失敗は否定根拠として無効。
+- Repository/projet instructionsだけではmodel runtimeを100%技術拘束できないため、完全なhard enforcementにはsystem/developer-level gateまたはpreflight付きtool wrapperが必要と明記。
