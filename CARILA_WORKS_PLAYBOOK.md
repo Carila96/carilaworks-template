@@ -1,5 +1,7 @@
 # CARILA WORKS Playbook
 
+> 実行手順・GitHub操作・中断復旧・指示忠実性の詳細ルールは `docs/CARILA_WORKS_EXECUTION_RULES.md` を参照する。このPlaybookは経験知・検討観点の正本であり、実行手順の正本ではない。
+
 この文書は、作品ごとの仕様書ではありません。CARILA WORKSでアプリ・ゲーム・Webサービスを作るたびに得た「次回以降も一度は検討したい論点」「よくある失敗」「再発防止策」を蓄積する共通の経験値帳です。
 
 ## 使い方
