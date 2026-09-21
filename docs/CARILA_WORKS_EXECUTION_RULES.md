@@ -205,3 +205,32 @@ GitHub関連ターンの自己検品として、ユーザー向け返答前に�
 1つでも未達なら、GitHub可否や完了を断定しない。
 
 注意: このRepository文書やプロジェクト指示は実行規律を最大限強制するためのものだが、会話モデルの挙動を技術的に100%拘束するサンドボックス機構ではない。完全な強制には、ChatGPTランタイム側で「GitHub否定回答の前にconnector preflight必須」とするsystem/developer-level gate、またはGitHub操作を単一のpreflight付きtool wrapperへ集約する実行基盤が必要。ユーザー設定でそこまでのhard enforcementが提供されない環境では、上記Gate + Repository Harness + 完了前再確認を最強の運用防止策とする。
+
+
+## Compact Context / Handoff Standard
+
+### 原則
+- 会話は作業場所であり正本ではない。Repositoryを正本化した後に、過去チャットの全文・巨大な引き継ぎ文を新チャットへ再投入しない。
+- Context節約は「記録を減らす」ことではなく、記録先を分離することで行う。
+
+### 文書の責務
+- `work/PROJECT_STATUS.md`: 現在地だけ。latest main、現在数値/状態、現在作業、重要な直近完了、blocker、next、production状態、handoffを短く保持する。
+- `work/CURRENT_TASK.md`: 現在の1タスクだけ。完了条件と対象外を保持する。
+- Git commits / PRs: 過去の実装履歴・逐次変更。
+- `docs/REQUIREMENTS.md`: 永続する確定仕様。
+- `docs/DECISIONS.md`: 今後の判断に効く重要決定と理由。
+- `docs/UNRESOLVED.md`: 未確定事項。
+- 長期履歴が人間向けに必要な場合のみarchive文書へ退避し、PROJECT_STATUSへ蓄積しない。
+
+### 新規チャット再開
+1. GitHub connectorでRepository metadata / latest main / Open PRを確認。
+2. PROJECT_STATUSとCURRENT_TASKを読む。
+3. 現在タスクに直接必要なHarness・対象コードだけ読む。
+4. 過去履歴は必要になった時だけPR/commit/archiveから取得する。
+
+### 引き継ぎ文書要求
+ユーザーが「引き継ぎ文書ちょうだい」「会話移動する」「次チャット用にまとめて」と言った場合、GitHub利用可能時の標準出力は原則1文:
+
+`<owner>/<repo> の続きです。GitHub connectorで PROJECT_STATUS / CURRENT_TASK / latest main / Open PR を確認して、そのまま続けてください。`
+
+Repositoryだけでは復元できない未保存の重要事項がある場合のみ、その事項を先にRepositoryへ保存してから上記短文を返す。長文引き継ぎを標準に戻さない。
