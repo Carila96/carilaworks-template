@@ -124,3 +124,13 @@ GitHub操作不能と報告する前に、対象Repositoryに対して認証済�
 
 - 同種の失敗、仕様の取り違え、引き継ぎ漏れが再発した場合は、その場の修正だけで終わらせず、どの Harness 文書・Playbook項目・ルール・検品条件を直せば再発を防げるか確認する。
 - Harness 自体の変更は作品仕様の変更と区別し、既存の確定仕様や lifecycle を暗黙に変更しない。
+
+
+## Compact handoff / context budget
+- `work/PROJECT_STATUS.md` は追記型の日誌ではなく、**現在地の短いスナップショット**として維持する。過去のPR・commit・作業ログを無制限に追記しない。
+- `work/CURRENT_TASK.md` は現在の1タスクだけを記述し、完了した過去タスクはGit/PR履歴へ任せる。
+- 過去の実装詳細はGit commits / PRs、永続仕様はREQUIREMENTS、重要判断はDECISIONS、未確定はUNRESOLVEDへ分離する。
+- 新規チャット再開時はまず `PROJECT_STATUS` → `CURRENT_TASK` → latest main / Open PR を確認し、その後**現在タスクに必要な文書・コードだけ**読む。履歴文書の全読込を標準にしない。
+- ユーザーが「引き継ぎ文書ちょうだい」「会話移動する」「次チャット用にまとめて」と依頼した場合、GitHubが利用可能なら長文の履歴再掲を避け、原則として次の最短形式を返す:
+  `<owner>/<repo> の続きです。GitHub connectorで PROJECT_STATUS / CURRENT_TASK / latest main / Open PR を確認して、そのまま続けてください。`
+- Repository名が確定している場合は実Repository名を入れる。現在の作業で特別な一時制約がある場合のみ、短い追記を加える。
