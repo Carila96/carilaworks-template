@@ -57,7 +57,7 @@
 - 主要Activation event: UNREVIEWED
 - 外部link / affiliate click計測: UNREVIEWED
 - title / description / canonical: UNREVIEWED
-- OGP / html lang / noindex確認: UNREVIEWED
+- 公開するURLごとのOGP画像・title・description・canonical・html lang / noindex確認: UNREVIEWED
 - robots.txt / sitemap.xml: UNREVIEWED
 - JSON-LD構造化データ: UNREVIEWED
 - 多言語hreflang（該当時）: UNREVIEWED
@@ -109,8 +109,9 @@
 - 自動pipelineの段階別証跡 / idempotency: UNREVIEWED
 - 管理画面 / 問い合わせ: UNREVIEWED
 - version / migration運用: UNREVIEWED
-- favicon / metadata / OGP: UNREVIEWED
-- OGPの実SNS確認 / cache更新手段: UNREVIEWED
+- 公開サイトのfavicon（小さなリンクアイコン）の設定・実表示: UNREVIEWED
+- 公開する入口URLごとのOGP / Twitter Card画像・公開アクセス・実SNS表示: UNREVIEWED
+- OGPとfaviconの役割の違い、画像差し替え時のcache更新手段: UNREVIEWED
 - share URL / recovery情報の離脱前保存導線: UNREVIEWED
 - app type別health check: UNREVIEWED
 - production / HTTPS / debug残存: UNREVIEWED
