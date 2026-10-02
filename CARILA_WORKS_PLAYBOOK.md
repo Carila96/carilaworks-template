@@ -274,3 +274,30 @@ SEOはmeta tagを置くだけで完了扱いせず、「誰が何を検索した
 
 - **経験:** モバイル管理カードで「削除」と「閉じる」が近接すると誤操作リスクが高く、横幅を持て余した縦積みUIも操作効率が悪かった。
 - **一般化:** destructive actionとdismiss actionは空間的・視覚的に分離する。dismissはheaderの×、deleteはカード下端など役割ごとに固定し、状態操作は2列等で横幅を活用する。モバイルでは見た目の整列より誤タップ回避を優先する。
+
+
+## CARILA WORKS Control release基盤から得た共通知見（2026-10-02）
+
+- **経験:** Cloudflare Static Assets配下で拡張子なしの予約health pathを使うと、HTML handling / asset routingの影響を受け、Worker側でrouteを実装していても404になる余地が残った。
+- **一般化:** Control-ownedの機械判定用artifactは、アプリ固有routeと衝突しない予約名かつ拡張子付きの固定asset（例: `/__carila-control-health.json`）として持たせる。Worker-first / asset-firstのどちらでも同一candidate identityを返せる構造にし、app固有`/health`を共通deploy契約へ昇格させない。
+
+- **経験:** static作品だけ「HTTP 2xxなら正常」、Worker Appだけcandidate identity検証、のようにadapterごとに成功条件が分岐すると、片側だけ誤判定や古いartifact判定が残った。
+- **一般化:** automatic adapterのProduction切替では、Domain record → exact Worker → Control-owned candidate/adapter identity → browser-facing rootの順に共通検証する。配信方式固有差はadapter名だけに閉じ、成功判定の骨格を共通化する。
+
+- **経験:** runtimeのadapter revisionとGitHub Actions側のexpected revisionを別々にhard-codeした結果、片方だけ更新される契約driftが起こり得た。
+- **一般化:** version / schema / adapter revisionは単一Source of Truthから派生させる。CI/CDの検証値を手で二重管理せず、runtime sourceまたは生成artifactから読み取る。
+
+- **経験:** Queue jobを`RUNNING`へした後にconsumerが中断すると、永続的に更新中扱いになる。またduplicate deliveryをそのままackすると、実処理が終わっていないjobを失う。
+- **一般化:** background jobにはlease / stale timeout / idempotent acquisitionを持たせる。処理中leaseを取得できないduplicateはackせず遅延retryし、stale leaseだけを再取得可能にする。UI側もstale jobを永久ロックとして扱わない。
+
+- **経験:** ブラウザ側とQueue consumer側の両方で同じRepository capability再判定をすると、GitHub API callと判定経路が重複し、結果不一致の余地が増えた。
+- **一般化:** correctnessに関わる再判定はserver / queue側のauthoritative pathへ集約し、browserは操作要求と状態表示に限定する。同期fallbackも同じserver helperを通す。
+
+- **経験:** 一時的なGET失敗1回でpollを終了したり、loading overlayをfinally以外で閉じる実装では、処理自体が継続していてもUIが「止まった」ように見えた。
+- **一般化:** read-only通信だけをbounded retryし、mutationは自動retryしない。長時間jobのpollはbackoffしながら継続し、loading / overlay cleanupは必ずfinallyで行う。
+
+- **経験:** optional webhook / secret-vault capabilityのSecret未設定までProduction deploy全体の必須条件にすると、利用していない補助機能のために正常なControl更新まで停止した。
+- **一般化:** required dependencyとoptional capabilityをCIでも分離する。未設定optional機能はnoticeに留め、共通正常系を止めない。
+
+- **経験:** 毎回Custom Domain PUTを実行すると、既に正しい設定でも外部control-plane mutationを増やし、障害面とAPI消費を広げる。
+- **一般化:** external control-plane変更はread-before-writeで現状態を確認し、desired stateと一致する場合はno-opにする。無意味なmutationを「念のため」で繰り返さない。
