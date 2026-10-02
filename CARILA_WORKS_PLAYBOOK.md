@@ -316,3 +316,12 @@ SEOはmeta tagを置くだけで完了扱いせず、「誰が何を検索した
 
 - **経験:** 一時rollbackは原因切り分けに有効だったが、必要なQueue / release_jobs / Push等まで恒久廃止したように見える危険があった。
 - **一般化:** rollbackは「安定coreの復元」と「機能廃止」を分けて記録する。復元後に実E2Eを通し、その上で隔離した機能を1系統ずつ戻し、各段階でAcceptanceを通す。rollbackしただけで元の設計目的を破棄しない。
+
+
+### CI_LAST_GATE — CI/Production Actionは調査の最後に1回だけ
+
+- **経験:** 目の前の失敗だけを直してruntimeをMergeし、その都度CI/Production Actionを走らせると、次の既知リスクを同じ事前調査で潰せたにもかかわらずActionsを消費し、ユーザーの再試行回数も増えた。
+- **一般化:** 同一導線の障害修正では、CIを「調査ツール」にしない。まずGitHub connectorとローカル/静的検証で、入力→capability判定→source取得→build/adapter→binding/secret→upload→routing→edge propagation→health/root→manifest/D1反映→cleanup/rollback→UIまでのfailure surfaceを列挙し、既知の穴を1 branchへまとめて潰す。
+- **強制ゲート:** runtime変更をmainへMergeしてCI/Production Actionを発火してよいのは、(1) 対象導線と正常実績作品との差分比較、(2) 変更契約を参照する全test/fixture/constant検索、(3) optional/required依存、外部control-planeのeventual consistency、timeout/retry、rollback、stale state、manifest/D1 driftの確認、(4) 追加で静的に潰せる既知リスクが残っていないこと、を確認した後だけとする。
+- **運用:** CI失敗で新しい既知問題が出ても即座に次のMergeをしない。ログを起点にもう一度全参照を監査し、次の一回へまとめる。docs/test-onlyでruntime deploy不要な変更はProduction Actionを発火させない。
+- **完了条件:** 「CIがgreen」ではなく実作品E2Eまで通ること。ただし実作品E2E前にも、コードから予測できるfailure classは可能な限り先回りして潰し、ユーザーに何度も同じボタンを押させない。
