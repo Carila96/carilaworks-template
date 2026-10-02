@@ -301,3 +301,18 @@ SEOはmeta tagを置くだけで完了扱いせず、「誰が何を検索した
 
 - **経験:** 毎回Custom Domain PUTを実行すると、既に正しい設定でも外部control-plane mutationを増やし、障害面とAPI消費を広げる。
 - **一般化:** external control-plane変更はread-before-writeで現状態を確認し、desired stateと一致する場合はno-opにする。無意味なmutationを「念のため」で繰り返さない。
+
+
+### バグが連続する時の回帰調査ルール
+
+- **経験:** 同じユーザー操作が何度も失敗しているのに、hash / MIME / fallback / retryなど観測できた症状ごとに小さな修正を重ねると、共通のRelease契約そのものの不整合を見逃しやすい。個々のCIやcanaryがgreenでも、実作品E2Eが通らなければ原因は未解決である。
+- **一般化:** 同一導線で2回以上「修正後も再発」した時点でforward patchを一旦止め、last-known-good、変更期間、外部状態、adapter契約、実作品E2Eを横断したregression auditへ切り替える。症状の近くではなく、入力→変換→外部API→配信→実ブラウザまでの全経路を1枚の契約として見直す。
+
+- **経験:** テストで`ASSETS.fetch()`等の外部依存を「正常に動くmock」として注入していたため、実際にはその依存自体が壊れていてもunit/integration testがgreenになった。さらに実装変更後にsource-shape assertionが古いまま残り、Production runをtest段階で止めた。
+- **一般化:** 外部依存をmockするテストだけで「実配信可能」を証明しない。少なくとも1本は「その依存が無い／壊れている」条件か、生成artifact単体でユーザー-facing rootが成立する条件をAcceptanceへ入れる。実装契約を変えた時は、同じ契約を参照する全testをMerge前に検索・更新し、source文字列一致ではなく実際の生成artifact / metadata / responseを検証する。
+
+- **経験:** Actions停止中に複数のRelease変更がmainへ蓄積し、後からまとめてProductionへ到達したため、どの変更が回帰原因かを特定しにくくなった。
+- **一般化:** Productionへ出せない期間に基盤変更を積む場合、各変更の「未Production検証」を明示し、最後に成功したProduction revisionを記録する。復旧時は蓄積変更を一括で正常と仮定せず、last-known-goodからの差分と実作品E2Eを段階的に検証する。
+
+- **経験:** 一時rollbackは原因切り分けに有効だったが、必要なQueue / release_jobs / Push等まで恒久廃止したように見える危険があった。
+- **一般化:** rollbackは「安定coreの復元」と「機能廃止」を分けて記録する。復元後に実E2Eを通し、その上で隔離した機能を1系統ずつ戻し、各段階でAcceptanceを通す。rollbackしただけで元の設計目的を破棄しない。
