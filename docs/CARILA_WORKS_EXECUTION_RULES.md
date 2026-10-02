@@ -153,6 +153,16 @@ Git状態はGitHub上の実状態を優先し、古いlocal cloneを最新GitHub
 
 「これだけ変更」「それ以外を変えない」は厳守する。視覚変更はコード上に値があるだけで完了とせず、ユーザー指定の視覚差が実際に見えることをAcceptanceとする。変更量が小さすぎて実機上ほぼ判別できない場合は要求を満たしたと扱わない。対象外のUI、機能、data、挙動を変更しない。
 
+## CI実行タイミング / Draft PR標準
+- ActionsのCIは安全性の最終ゲートとして維持するが、制作中の細かなpushごとには走らせない。
+- 実装途中は作業branchとDraft PRへ随時保存し、GitHubを現在地の正本として保つ。Draft中でもconnectorで差分・状態を読めるため、CI節約のためにRepository記録を減らしてはならない。
+- Draft中は可能な限りGitHub Actions CIをskipし、代わりにcontainer/local環境で `node --check`、unit/contract test、typecheck、lint、build、test runner等の非Actions検証を随時行う。これらはGitHub Actions利用枠を消費しない。ただし外部APIや有料サービスを呼ぶテストはその外部サービス側のquota/costを別途確認する。
+- Merge候補の判定はChatGPTが行う。依頼範囲の実装完了、PROJECT_STATUS/CURRENT_TASK整合、利用可能な非Actions検証PASS、既知blockerなし、Acceptanceの該当項目確認を満たしたら、ユーザーへCI実行可否を逐一確認せずDraft PRをReady for reviewへ移す。
+- PR CI workflowは `pull_request.types: [opened, synchronize, reopened, ready_for_review]` を含め、PR event時は `github.event.pull_request.draft == false` のjob条件でDraftをskipする。これによりReady移行時に自動で最終CIが起動する。
+- CIがPASSし、Merge可能で、ユーザー指示に反する未確認事項がなければChatGPTがMergeまで進める。CI失敗時は原因を直し、関連修正をまとめてから再実行する。
+- Control Preview/Production更新はこのCI発火条件とは別物。作品RepositoryのCIを通したmainをControlがPreview/Productionへreleaseする。
+- 認証・決済・migration・data破壊リスク等の高リスク変更は、最終CIまで待つだけでなく途中でも非Actions検証を厚くし、必要なら明示的な追加検証を行う。
+
 ## GitHub connectorとActionsの役割分離
 GitHub connectorの主用途:
 - Repository確認
