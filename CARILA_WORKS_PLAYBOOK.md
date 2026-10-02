@@ -325,3 +325,13 @@ SEOはmeta tagを置くだけで完了扱いせず、「誰が何を検索した
 - **強制ゲート:** runtime変更をmainへMergeしてCI/Production Actionを発火してよいのは、(1) 対象導線と正常実績作品との差分比較、(2) 変更契約を参照する全test/fixture/constant検索、(3) optional/required依存、外部control-planeのeventual consistency、timeout/retry、rollback、stale state、manifest/D1 driftの確認、(4) 追加で静的に潰せる既知リスクが残っていないこと、を確認した後だけとする。
 - **運用:** CI失敗で新しい既知問題が出ても即座に次のMergeをしない。ログを起点にもう一度全参照を監査し、次の一回へまとめる。docs/test-onlyでruntime deploy不要な変更はProduction Actionを発火させない。
 - **完了条件:** 「CIがgreen」ではなく実作品E2Eまで通ること。ただし実作品E2E前にも、コードから予測できるfailure classは可能な限り先回りして潰し、ユーザーに何度も同じボタンを押させない。
+
+
+### 実作品404回帰の解決パターン — Control greenではなく実E2Eを正本にする
+
+- **事例:** CARILA WORKS ControlはProduction deploy / health / canaryがgreenでも、C-LINKsの実Previewはcandidate rootで404を返し続けた。最終的に、最後にProduction実績のある同期Release coreへ戻して構造を安定させ、small Worker Appのstatic assetsをgenerated adapterへinlineしてnative ASSETS依存を外し、さらにworkers.devのcontrol-plane enabledと実edge到達を別状態として扱ってexact candidate adapter到達後にroot HTMLを確認することで、実PreviewのURL作成・QR生成・履歴・短縮redirectまで成功した。
+- **学び:** CI/canary/Control healthのgreenは「Control自身がdeployできた」証拠であって、作品E2Eの代替ではない。Release基盤の完了条件は、代表実作品で user click → source取得 → adapter生成 → binding/secret → upload → workers.dev/custom domain → browser-facing root/API → manifest/D1反映まで通ること。
+- **学び:** 外部platformのcontrol-plane成功をdata-plane成功と同一視しない。Cloudflareではroute enabled直後にedgeが未反映な時間があり得るため、exact candidate identityを持つreserved probeでdata-plane readinessを確認してからrootを判定する。
+- **学び:** mockされたASSETS等がgreenでも、実platform bindingが壊れれば作品は失敗する。小規模artifactでは外部bindingを必須依存から外せるなら外し、生成artifact単体でrootを返せるAcceptanceを持つ。
+- **学び:** 一時rollbackで安定coreを取り戻した場合、隔離したQueue / release_jobs / Push等の目的まで破棄しない。実作品E2Eがgreenになった地点を新しいbaselineとし、その上へ機能を1系統ずつ再導入する。
+- **学び:** 同じ障害でユーザーに再試行を繰り返させない。既知failure surfaceを静的に洗い切り、CI_LAST_GATEを通した後だけProduction Actionを1回起動し、その後の1クリックをAcceptanceに使う。
