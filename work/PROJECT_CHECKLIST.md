@@ -2,6 +2,8 @@
 
 `CARILA_WORKS_PLAYBOOK.md` の共通経験を、この作品でどう扱うか記録します。目的は「未検討のまま忘れること」を防ぐことです。
 
+> **変更前の必須ゲート:** 不具合修正・機能追加・運用改善では、実装前に [`docs/ARCHITECTURE_CHANGE_POLICY.md`](../docs/ARCHITECTURE_CHANGE_POLICY.md) を確認し、既存経路・Source of Truth・旧構造・Actions/外部コストへの影響を確認する。局所パッチを先に追加しない。
+
 ## Status
 
 - `UNREVIEWED` — まだ検討していない。残タスク確認時に候補として再提示する。
@@ -101,6 +103,14 @@
 - build / typecheck / lint / tests: UNREVIEWED
 - 作品固有Acceptance: UNREVIEWED
 - production URLでの中核フローE2E: UNREVIEWED
+
+## アーキテクチャ健全性
+- Source of Truthが分裂していないか: UNREVIEWED
+- 同じ目的のroute / adapter / workflow / scriptが重複していないか: UNREVIEWED
+- 旧実装 / compat shim / dead path / stale fixtureが残っていないか: UNREVIEWED
+- 巨大moduleへの継ぎ足しではなく責務分離が必要か: UNREVIEWED
+- DEPENDENCY / ROUTE / ACTIONS / LEGACY CLEANUP DELTAを確認したか: UNREVIEWED
+- bot commit / schedule / push triggerがworkflowを連鎖発火しないか: UNREVIEWED
 
 ## 運用・公開
 - 障害検知 / analytics: UNREVIEWED
