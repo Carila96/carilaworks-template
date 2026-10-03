@@ -19,15 +19,11 @@
 
 ## 候補
 
-<!--
-### YYYY-MM-DD: 短い名前
+### 2026-10-03: Eventual consistencyは最初のidentity probeから待つ
 - Status: CANDIDATE
-- 発見した事象:
-- 原因 / 背景:
-- 一般化した知見:
-- どんな作品で有効か:
-- 根拠 / 確認方法:
-- Playbook反映先候補:
--->
-
-現在、未処理候補はありません。
+- 発見した事象: Custom Domainのcontrol-plane recordが新candidateを指した後でもedge routing反映前はadapter-owned health probeがHTTP 530になり得る。後段root probeに十分な待機時間があっても、最初のidentity probeが短いとそこへ到達せずrollbackする。また、rollback後にrelease全体を作り直すgeneric retryはcandidate/domainを再生成し、propagation待ちをゼロからやり直す副作用がある。
+- 原因 / 背景: eventual consistency対策を後段probeには入れていたが、最初のidentity/control probeと待機budgetを揃えていなかった。failure familyを区別せず5xx全般をwhole-release retry対象にしていた。
+- 一般化した知見: control-plane成功からedge readinessを検証する多段releaseでは、最初のidentity probeから同一resource identityを保持して十分なbounded propagation windowを設ける。edgeの一時応答にはcache-bustも検討する。十分なwindowを使い切った後にresourceをtear down/recreateするretryは収束をリセットし得るため、failure family別にretry classifierを持つ。テストは実装構文ではなく、待機budget・identity retention・rollback/retry side effectをassertする。
+- どんな作品で有効か: CDN / edge / Custom Domain / DNS / Queueなどeventual consistencyを伴うdeploy・Preview・Production更新。
+- 根拠 / 確認方法: C-LINKs初回Productionの`HEALTH_CHECK / HTTP 530`、Control PR #221、branch verification run `37107738523`（208 tests PASS / check PASS）、Production run #211 `37107947468`（新runtime fingerprintのsame-candidate safety gate READY、workflow SUCCESS）。
+- Playbook反映先候補: Release / deployのeventual consistency、retry policy、CI_LAST_GATE / failure-surface audit。
